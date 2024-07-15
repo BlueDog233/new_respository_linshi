@@ -1,4 +1,5 @@
 from fastapi.staticfiles import StaticFiles
+from fastapi import FastAPI
 import uvicorn
 from proxy_manager import ProxyManager
 from work_manager import WorkManager
