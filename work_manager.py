@@ -14,6 +14,11 @@ class WorkManager:
         self.pointer_file = "pointer.txt"
         self.load_pointer()
         threading.Thread(target=self.save_pointers_periodically, daemon=True).start()
+        self.current_file_index = 0
+        self.current_line_index = 0
+        self.pointer_file = "pointer.txt"
+        self.load_pointer()
+        threading.Thread(target=self.save_pointers_periodically, daemon=True).start()
         self.files = []
         self.load_work()
         if self.files:
