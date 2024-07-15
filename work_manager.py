@@ -99,8 +99,8 @@ class WorkManager:
                     proxy.risk_value =proxy.risk_value-1
             with open(self.success_file, 'a') as f:
                 f.write(item + '\n')
-        else:
-            for proxy in main.proxy_manager.proxies:
+        proxy_manager.update_proxy_stats(ip, success)
+            for proxy in proxy_manager.proxies:
                 if proxy["ip"] == ip :
                     proxy.risk_value =proxy.risk_value+1
                     if proxy.risk_value==30:
