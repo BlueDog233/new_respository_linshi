@@ -83,9 +83,9 @@ def recheck_proxy(proxy: Proxy):
                     break
             proxy.available = True
 
-    def get_proxy(self):
-        with self.lock:
-            available_proxies = [p for p in self.proxies if p.available]
-            if not available_proxies:
-                return None
-            return random.choice(available_proxies).ip
+        def get_proxy(self):
+            with self.lock:
+                available_proxies = [p for p in self.proxies if p.available]
+                if not available_proxies:
+                    return None
+                return random.choice(available_proxies).ip
