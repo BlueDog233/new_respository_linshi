@@ -14,6 +14,7 @@ class WorkManager:
         self.pointer_file = "pointer.txt"
         self.load_pointer()
         threading.Thread(target=self.save_pointers_periodically, daemon=True).start()
+        threading.Thread(target=self.save_pointers_periodically, daemon=True).start()
         self.files = []
         self.load_work()
         if self.files:
@@ -82,6 +83,11 @@ class WorkManager:
         else:
             with open(self.failure_file, 'a') as f:
                 f.write(item + '\n')
+
+    def save_pointers_periodically(self):
+        while True:
+            time.sleep(5)
+            self.save_pointer()
 
     def get_pending_work(self):
         return self.cache
