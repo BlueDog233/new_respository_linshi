@@ -8,11 +8,11 @@ from DrissionPage._pages.chromium_page import ChromiumPage
 
 
 class Proxy:
-    def __init__(self, ip: str,id:int):
+    def __init__(self, ip: str, id: int):
         self.ip = ip
         self.available = True
         self.last_checked = time.time()
-        self.id=id
+        self.id = id
 
 class ProxyManager:
     def __init__(self):
@@ -20,18 +20,19 @@ class ProxyManager:
         self.lock = threading.Lock()
         self.recheck_interval = 300  # 5分钟
 
-    def add_proxy(self, proxy: str,id:int):
+    def add_proxy(self, proxy: str, id: int):
         with self.lock:
-            self.proxies.append(Proxy(proxy,id))
+            self.proxies.append(Proxy(proxy, id))
 
     def report_proxy(self, proxy: str):
         for p in self.proxies:
             if p.ip == proxy:
                 p.available = False
                 p.last_checked = time.time()
-                multiprocessing.Process(target=self.recheck_proxy, args=(p,)).start()
+                multiprocessing.Process(target=recheck_proxy, args=(p,)).start()
 
-    def recheck_proxy(self, proxy: Proxy):
+
+def recheck_proxy(proxy: Proxy):
         """
         更改代理IP
         :param proxy:
