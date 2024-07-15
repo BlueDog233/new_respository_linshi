@@ -25,7 +25,7 @@ class WorkManager:
         if not self.files:
             return
         file = self.files[self.current_file_index]
-            with open(os.path.join(self.work_dir, file), 'r') as f:
+        with open(os.path.join(self.work_dir, file), 'r') as f:
                 # 从当前行开始读取
                 f_content = f.read().splitlines()
                 self.cache = f_content[self.current_line_index:]
