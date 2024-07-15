@@ -1,5 +1,7 @@
 import os
 import random
+import threading
+import time
 
 class WorkManager:
     def __init__(self, work_dir: str):
@@ -9,7 +11,9 @@ class WorkManager:
         self.failure_file = "results_failure.txt"
         self.current_file_index = 0
         self.current_line_index = 0
-        # 保留有序文件列表当前索引指向的文件名，以及相应文件分割的总数量
+        self.pointer_file = "pointer.txt"
+        self.load_pointer()
+        threading.Thread(target=self.save_pointers_periodically, daemon=True).start()
         self.files = []
         self.load_work()
         if self.files:
@@ -41,6 +45,9 @@ class WorkManager:
 
 
     def get_work(self):
+        # 保存当前指针
+        self.save_pointer()
+
         # 当前文件和行指针结束时，尝试移动到下一个文件
         if self.current_line_index >= len(self.cache) and self.current_file_index < len(self.files) - 1:
             self.current_file_index += 1
@@ -56,7 +63,22 @@ class WorkManager:
         return work
 
 
-    def process_work(self, item: str, success: bool):
+    def save_pointer(self):
+        with open(self.pointer_file, "w") as f:
+            f.write(f"{self.current_file_index},{self.current_line_index}")
+
+    def load_pointer(self):
+        if os.path.exists(self.pointer_file):
+            with open(self.pointer_file, "r") as f:
+                data = f.read().strip().split(",")
+                if len(data) == 2:
+                    self.current_file_index = int(data[0])
+                    self.current_line_index = int(data[1])
+
+    def save_pointers_periodically(self):
+        while True:
+            time.sleep(5)
+            self.save_pointer()
         if success:
             with open(self.success_file, 'a') as f:
                 f.write(item + '\n')
