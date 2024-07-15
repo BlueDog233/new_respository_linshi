@@ -11,6 +11,8 @@ app = FastAPI()
 # 初始化IP池管理和工作管理
 proxy_manager = ProxyManager()
 work_manager = WorkManager(work_dir="work")
+proxy_manager.add_proxy('O24071317113287845499_1:9SJCsgfE@static-qiye.hailiangip.com:41025')
+proxy_manager.add_proxy('O24071218402747623548_1:PyMNKosT@static-qiye.hailiangip.com:41549')
 
 @app.post("/report_proxy")
 async def report_proxy(proxy: str):
@@ -55,4 +57,4 @@ if __name__ == "__main__":
         os.makedirs("work")
     
     # 启动FastAPI应用
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="127.0.0.1", port=8000)
