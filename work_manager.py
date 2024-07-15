@@ -13,6 +13,7 @@ class WorkManager:
         self.current_line_index = 0
         self.pointer_file = "pointer.txt"
         self.load_pointer()
+        self.split_small_files()  # 在载入工作之后调用以重新命名小文件
         threading.Thread(target=self.save_pointers_periodically, daemon=True).start()
         self.files = []
         self.load_work()
@@ -24,7 +25,7 @@ class WorkManager:
         # 只加载当前文件索引指定的文件
         self.cache = []
         if not self.files:
-            self.files = [file for file in files if os.path.isfile(os.path.join(self.work_dir, file))]
+            self.files = [file for file in files if os.path.isfile(os.path.join(self.work_dir, file)) and "_part_" in file]
             self.files.sort()
         if not self.files:
             return
@@ -35,6 +36,18 @@ class WorkManager:
                 self.cache = f_content[self.current_line_index:]
 
 
+
+    def split_small_files(self):
+        files = os.listdir(self.work_dir)
+        for file in files:
+            if os.path.isfile(os.path.join(self.work_dir, file)) and "_part_" not in file:
+                with open(os.path.join(self.work_dir, file), 'r') as f:
+                    lines = f.read().splitlines()
+                if len(lines) < 1000:
+                    self.split_file(file, lines)
+                    os.remove(os.path.join(self.work_dir, file))          
+        self.files = [file for file in os.listdir(self.work_dir) if os.path.isfile(os.path.join(self.work_dir, file)) and "_part_" in file]
+        self.files.sort()
 
     def split_file(self, file: str, lines: list):
         chunks = [lines[i:i + 1000] for i in range(0, len(lines), 1000)]

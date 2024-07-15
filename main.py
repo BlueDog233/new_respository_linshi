@@ -49,6 +49,17 @@ async def failed_work():
     failed = work_manager.get_failed_work()
     return {"failed_work": failed}
 
+@app.get("/task_summary")
+async def task_summary():
+    total_success = len(work_manager.get_successful_work())
+    total_failure = len(work_manager.get_failed_work())
+    total_pending = len(work_manager.get_pending_work())
+    return {
+        "total_success": total_success,
+        "total_failure": total_failure,
+        "total_pending": total_pending
+    }
+
 app.mount("/", StaticFiles(directory="crawler-frontend/build", html=True), name="frontend")
 
 if __name__ == "__main__":
