@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi.staticfiles import StaticFiles
 import uvicorn
 from proxy_manager import ProxyManager
 from work_manager import WorkManager
@@ -45,6 +45,8 @@ async def successful_work():
 async def failed_work():
     failed = work_manager.get_failed_work()
     return {"failed_work": failed}
+
+app.mount("/", StaticFiles(directory="crawler-frontend/build", html=True), name="frontend")
 
 if __name__ == "__main__":
     # 创建工作目录
