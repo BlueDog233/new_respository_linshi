@@ -80,10 +80,13 @@ class WorkManager:
                     self.current_file_index = int(data[0])
                     self.current_line_index = int(data[1])
 
-    def save_pointers_periodically(self):
-        while True:
-            time.sleep(5)
-            self.save_pointer()
+    def process_work(self, item: str, success: bool):
+        if success:
+            with open(self.success_file, 'a') as f:
+                f.write(item + '\n')
+        else:
+            with open(self.failure_file, 'a') as f:
+                f.write(item + '\n')
 
     def get_pending_work(self):
         return self.cache
