@@ -84,12 +84,6 @@ class WorkManager:
         while True:
             time.sleep(5)
             self.save_pointer()
-        if success:
-            with open(self.success_file, 'a') as f:
-                f.write(item + '\n')
-        else:
-            with open(self.failure_file, 'a') as f:
-                f.write(item + '\n')
 
     def get_pending_work(self):
         return self.cache
