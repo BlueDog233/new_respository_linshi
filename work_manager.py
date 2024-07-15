@@ -42,3 +42,18 @@ class WorkManager:
         else:
             with open(self.failure_file, 'a') as f:
                 f.write(item + '\n')
+
+    def get_pending_work(self):
+        return self.cache
+
+    def get_successful_work(self):
+        if os.path.exists(self.success_file):
+            with open(self.success_file, 'r') as f:
+                return f.read().splitlines()
+        return []
+
+    def get_failed_work(self):
+        if os.path.exists(self.failure_file):
+            with open(self.failure_file, 'r') as f:
+                return f.read().splitlines()
+        return []

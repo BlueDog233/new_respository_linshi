@@ -31,6 +31,21 @@ async def process_work(item: str, success: bool):
     work_manager.process_work(item, success)
     return {"status": "success"}
 
+@app.get("/pending_work")
+async def pending_work():
+    pending = work_manager.get_pending_work()
+    return {"pending_work": pending}
+
+@app.get("/successful_work")
+async def successful_work():
+    successful = work_manager.get_successful_work()
+    return {"successful_work": successful}
+
+@app.get("/failed_work")
+async def failed_work():
+    failed = work_manager.get_failed_work()
+    return {"failed_work": failed}
+
 if __name__ == "__main__":
     # 创建工作目录
     if not os.path.exists("work"):
