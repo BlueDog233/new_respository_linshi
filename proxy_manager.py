@@ -1,7 +1,7 @@
 import random
 import time
 import threading
-from multiprocessing import Process
+import multiprocessing
 
 import requests
 from DrissionPage._pages.chromium_page import ChromiumPage
@@ -29,7 +29,7 @@ class ProxyManager:
             if p.ip == proxy:
                 p.available = False
                 p.last_checked = time.time()
-                Process(target=self.recheck_proxy, args=(p,)).start()
+                multiprocessing.Process(target=self.recheck_proxy, args=(p,)).start()
 
     def recheck_proxy(self, proxy: Proxy):
         """
