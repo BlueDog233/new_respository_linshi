@@ -102,7 +102,12 @@ class WorkManager:
             self.save_pointer()
 
     def get_pending_work(self):
-        return self.cache
+        # Estimate total pending work based on file index and line index.
+        total_files_pending = len(self.files) - self.current_file_index - 1
+        total_lines_in_pending_files = total_files_pending * 1000  # Assuming each file is approximately 1000 lines.
+        pending_lines_in_current_file = len(self.cache) - self.current_line_index
+        total_pending_work = total_lines_in_pending_files + pending_lines_in_current_file
+        return total_pending_work
 
     def get_successful_work(self):
         if os.path.exists(self.success_file):
