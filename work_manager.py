@@ -3,8 +3,12 @@ import random
 import threading
 import time
 
+from proxy_manager import proxy_manager
+
+
 class WorkManager:
     def __init__(self, work_dir: str):
+
         self.work_dir = work_dir
         self.cache = []
         self.success_file = "results_success.txt"
@@ -88,11 +92,19 @@ class WorkManager:
                     self.current_file_index = int(data[0])
                     self.current_line_index = int(data[1])
 
-    def process_work(self, item: str, success: bool):
+    def process_work(self, item: str, success: bool,ip:str):
         if success:
+            for proxy in proxy_manager.proxies:
+                if proxy.ip == ip and proxy.risk_value>0:
+                    proxy.risk_value =proxy.risk_value-1
             with open(self.success_file, 'a') as f:
                 f.write(item + '\n')
         else:
+            for proxy in main.proxy_manager.proxies:
+                if proxy["ip"] == ip :
+                    proxy.risk_value =proxy.risk_value+1
+                    if proxy.risk_value==30:
+                        main.proxy_manager.report_proxy(proxy.ip)
             with open(self.failure_file, 'a') as f:
                 f.write(item + '\n')
 
